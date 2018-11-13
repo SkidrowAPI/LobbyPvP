@@ -27,7 +27,7 @@ public class Executor implements CommandExecutor {
 
 
 
-
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
         if (!(sender instanceof Player)) {
             plugin.getLogger().warning("Only for player's");
