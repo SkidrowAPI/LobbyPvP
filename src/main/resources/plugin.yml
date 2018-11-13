@@ -1,0 +1,7 @@
+name: LobbyPvP
+main: ru.skidrowapi.lobbypvp.Loader
+version: 1.0
+description: LobbyPvP
+commands:
+  pvp:
+    usage: /pvp
