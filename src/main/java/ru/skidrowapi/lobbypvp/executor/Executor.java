@@ -37,10 +37,13 @@ public class Executor implements CommandExecutor {
         if (args.length == 0) {
             if (p.isOp()) {
                 p.sendMessage(ChatColor.YELLOW + "/pvp start <arena>" + ChatColor.AQUA + " - включает турниры(default или sumo)");
+                p.sendMessage(ChatColor.YELLOW + "/pvp world <arena>" + ChatColor.AQUA + " - войти в мир(default или sumo)");
+                p.sendMessage(ChatColor.YELLOW + "/pvp setlobby <arena>" + ChatColor.AQUA + " - устанавливает новый спавн лобби (там где вы стоите!)");
+                p.sendMessage(ChatColor.YELLOW + "/pvp setspawn1 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
+                p.sendMessage(ChatColor.YELLOW + "/pvp setspawn2 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
+
             }
             p.sendMessage(ChatColor.YELLOW + "/pvp join <arena>" + ChatColor.AQUA + " - войти в турнир(default или sumo)");
-            p.sendMessage(ChatColor.YELLOW + "/pvp world <arena>" + ChatColor.AQUA + " - войти в мир(default или sumo)");
-            p.sendMessage(ChatColor.YELLOW + "/pvp setlobby <arena>" + ChatColor.AQUA + " - устанавливает новый спавн лобби (там где вы стоите!)");
 
         }else
         if ((args[0].equalsIgnoreCase("start"))&&(args[1].equalsIgnoreCase("default"))) {
@@ -93,14 +96,40 @@ public class Executor implements CommandExecutor {
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("z",zl);
                 plugin.saveConfig();
                 p.sendMessage(ChatColor.RED+"Новое лобби для default создано!");
-            }else p.sendMessage(ChatColor.RED+"Перейдите в мир default.");
-
+            }else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
+        }else if((args[0].equalsIgnoreCase("setspawn1"))||(args[1].equalsIgnoreCase("default"))){
+            worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
+            World defaultworld= plugin.getServer().getWorld(worldarena);
+            if(p.getLocation().getWorld()==defaultworld){
+                xl=p.getLocation().getX();
+                yl=p.getLocation().getY();
+                zl=p.getLocation().getZ();
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("x",xl);
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("y",yl);
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("z",zl);
+                plugin.saveConfig();
+                p.sendMessage(ChatColor.RED+"Новая точка для игрока№1 в мире"+ plugin.getConfig().getConfigurationSection("pvparena").get("world")+" создана!");
+            }else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
+        }else if((args[0].equalsIgnoreCase("setspawn2"))||(args[1].equalsIgnoreCase("default"))) {
+            worldarena = plugin.getConfig().getConfigurationSection("pvparena").getString("world");
+            World defaultworld = plugin.getServer().getWorld(worldarena);
+            if (p.getLocation().getWorld() == defaultworld) {
+                xl = p.getLocation().getX();
+                yl = p.getLocation().getY();
+                zl = p.getLocation().getZ();
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("x", xl);
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("y", yl);
+                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("z", zl);
+                plugin.saveConfig();
+                p.sendMessage(ChatColor.RED + "Новая точка для игрока№2 в мире" + plugin.getConfig().getConfigurationSection("pvparena").get("world") + " создана!");
+            } else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
         }
 
-            return true;
+        return true;
     }
 
-    public boolean getjoin(){
+    public Boolean getjoin(){
+        this.join=join;
         return join;
     }
 }
