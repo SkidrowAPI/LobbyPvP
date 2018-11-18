@@ -19,7 +19,7 @@ public class Executor implements CommandExecutor {
     }
     private Loader plugin;
 
-    private Integer time,timestart;
+    private int time,timestart;
     private Double xl,yl,zl;
     private String worldarena;
     private boolean join,vr,invent;
@@ -75,15 +75,18 @@ public class Executor implements CommandExecutor {
                     }
                 }
                 DefaultArena da=new DefaultArena(plugin);
-                da.tplobby(p);
+                da.tpLobby(p);
             }else{
                 p.sendMessage(ChatColor.RED+"Время для подключения вышло.");
                 return true;
             }
 
         }else if ((args[0].equalsIgnoreCase("world"))&&(args[1].equalsIgnoreCase("default"))) {
+            World defaultworld = plugin.getServer().getWorld(worldarena);
+            p.teleport(defaultworld.getSpawnLocation());
+        }else if((args[0].equalsIgnoreCase("leave"))&&(args[1].equalsIgnoreCase("default"))){
             DefaultArena da=new DefaultArena(plugin);
-            da.tplobby(p);
+            da.removeLobby(p.getWorld(),p);
         }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))) {
             worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
@@ -128,8 +131,4 @@ public class Executor implements CommandExecutor {
         return true;
     }
 
-    public Boolean getjoin(){
-        this.join=join;
-        return join;
-    }
 }

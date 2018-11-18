@@ -3,7 +3,7 @@ pvparena: #тип арены.
     x: 79
     y: 64
     z: 135
-  world: world_default #мир в котором будет турнир.
+  world: world_default_arena #мир в котором будет турнир.
   timestart: 30
   coordsPlayer1: #позиция арены, игрока которого телепорнет на арену под номер 1.
     x: 75

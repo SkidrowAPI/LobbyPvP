@@ -1,9 +1,10 @@
 package ru.skidrowapi.lobbypvp.tourneydefault;
 
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import ru.skidrowapi.lobbypvp.Loader;
 
 public class DefaultListener implements Listener {
@@ -13,11 +14,19 @@ public class DefaultListener implements Listener {
     }
     private Loader plugin;
 
+//    @EventHandler
+//    void onPlayerDead(PlayerDeathEvent e){
+//        Player p =e.getEntity();
+//        DefaultArena da=new DefaultArena(plugin);
+//        da.playerwin(p);
+//    }
+
     @EventHandler
-    void onPlayerDead(PlayerDeathEvent e){
-        Player p =e.getEntity();
+    void onTeleportWorld(PlayerTeleportEvent e){
+        World wk=e.getTo().getWorld();
+        Player p=e.getPlayer();
         DefaultArena da=new DefaultArena(plugin);
-        da.playerwin(p);
+        da.removeLobby(wk,p);
     }
 
 }
