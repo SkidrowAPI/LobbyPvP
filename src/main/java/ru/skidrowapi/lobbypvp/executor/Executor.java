@@ -1,17 +1,26 @@
 package ru.skidrowapi.lobbypvp.executor;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.skidrowapi.lobbypvp.Loader;
+import ru.skidrowapi.lobbypvp.sendMessage;
 import ru.skidrowapi.lobbypvp.tourneydefault.DefaultArena;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Executor implements CommandExecutor {
     public Executor(Loader instance) {
@@ -19,7 +28,7 @@ public class Executor implements CommandExecutor {
     }
     private Loader plugin;
 
-    private int time,timestart;
+    private int timestart;
     private Double xl,yl,zl;
     private String worldarena;
     private boolean join,vr,invent;
@@ -34,30 +43,30 @@ public class Executor implements CommandExecutor {
             return true;
         }
         Player p = (Player) sender;
+
+        final sendMessage m=new sendMessage(plugin);
+
         if (args.length == 0) {
             if (p.isOp()) {
-                p.sendMessage(ChatColor.YELLOW + "/pvp start <arena>" + ChatColor.AQUA + " - включает турниры(default или sumo)");
-                p.sendMessage(ChatColor.YELLOW + "/pvp world <arena>" + ChatColor.AQUA + " - войти в мир(default или sumo)");
-                p.sendMessage(ChatColor.YELLOW + "/pvp setlobby <arena>" + ChatColor.AQUA + " - устанавливает новый спавн лобби (там где вы стоите!)");
-                p.sendMessage(ChatColor.YELLOW + "/pvp setspawn1 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
-                p.sendMessage(ChatColor.YELLOW + "/pvp setspawn2 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
-
+                m.PLAYER_COMMAND_HASPERM(p);
             }
-            p.sendMessage(ChatColor.YELLOW + "/pvp join <arena>" + ChatColor.AQUA + " - войти в турнир(default или sumo)");
+            m.PLAYER_COMMAND_NOTHASPERM(p);
 
         }else
         if ((args[0].equalsIgnoreCase("start"))&&(args[1].equalsIgnoreCase("default"))) {
-            if(p.isOp()==false){p.sendMessage(ChatColor.RED+"Недостаточно прав!");
+            if(p.isOp()==false){
+                m.DONT_HAS_PEEMISSION(p);
                 return true;
             }
             join=true; timestart=plugin.getConfig().getConfigurationSection("pvparena").getInt("timestart");
-            plugin.getServer().broadcastMessage(ChatColor.BLUE+"Запустилась арена"+ChatColor.DARK_BLUE+" default "+ChatColor.BLUE+", запущен таймер на подключение к лобби!");
+            m.START_DEFAULT_ARENA();
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     join=false;
-                    plugin.getServer().broadcastMessage(ChatColor.BLUE+"Теперь подключится к арене"+ChatColor.DARK_BLUE+" default "+ChatColor.BLUE+"не получится, таймер остановился!");
-
+                    DefaultArena da=new DefaultArena(plugin);
+                    da.checkTime(join);
+                    m.STOP_DEFAULT_ARENA();
                 }
             }.runTaskLater(this.plugin, 20*timestart);
         }else
@@ -70,14 +79,14 @@ public class Executor implements CommandExecutor {
                     invent=true;
                     }else{
                         invent=false;
-                        p.sendMessage(ChatColor.RED+"Очистите полностью инвентарь!");
+                        m.CLEAR_INVENTORY(p);
                         return true;
                     }
                 }
                 DefaultArena da=new DefaultArena(plugin);
                 da.tpLobby(p);
             }else{
-                p.sendMessage(ChatColor.RED+"Время для подключения вышло.");
+               m.STOP_CONNECT(p);
                 return true;
             }
 
@@ -86,7 +95,8 @@ public class Executor implements CommandExecutor {
             p.teleport(defaultworld.getSpawnLocation());
         }else if((args[0].equalsIgnoreCase("leave"))&&(args[1].equalsIgnoreCase("default"))){
             DefaultArena da=new DefaultArena(plugin);
-            da.removeLobby(p.getWorld(),p);
+            s="(по собственному желанию)";
+            da.leaveLobby(p,s);
         }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))) {
             worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
@@ -98,9 +108,9 @@ public class Executor implements CommandExecutor {
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("y",yl);
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("z",zl);
                 plugin.saveConfig();
-                p.sendMessage(ChatColor.RED+"Новое лобби для default создано!");
-            }else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
-        }else if((args[0].equalsIgnoreCase("setspawn1"))||(args[1].equalsIgnoreCase("default"))){
+                m.NEW_SPAWN_LOBBY_DEFAULT(p);
+            }else m.GOTO_DEFAULT_WORLD(p);
+        }else if((args[0].equalsIgnoreCase("setspawn1"))&&(args[1].equalsIgnoreCase("default"))){
             worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
             if(p.getLocation().getWorld()==defaultworld){
@@ -111,9 +121,9 @@ public class Executor implements CommandExecutor {
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("y",yl);
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("z",zl);
                 plugin.saveConfig();
-                p.sendMessage(ChatColor.RED+"Новая точка для игрока№1 в мире"+ plugin.getConfig().getConfigurationSection("pvparena").get("world")+" создана!");
-            }else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
-        }else if((args[0].equalsIgnoreCase("setspawn2"))||(args[1].equalsIgnoreCase("default"))) {
+                m.SET_POINT_PLAYER1(p);
+            }else m.GOTO_DEFAULT_WORLD(p);
+        }else if((args[0].equalsIgnoreCase("setspawn2"))&&(args[1].equalsIgnoreCase("default"))) {
             worldarena = plugin.getConfig().getConfigurationSection("pvparena").getString("world");
             World defaultworld = plugin.getServer().getWorld(worldarena);
             if (p.getLocation().getWorld() == defaultworld) {
@@ -124,8 +134,8 @@ public class Executor implements CommandExecutor {
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("y", yl);
                 plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("z", zl);
                 plugin.saveConfig();
-                p.sendMessage(ChatColor.RED + "Новая точка для игрока№2 в мире" + plugin.getConfig().getConfigurationSection("pvparena").get("world") + " создана!");
-            } else p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
+                m.SET_POINT_PLAYER2(p);
+            } else m.GOTO_DEFAULT_WORLD(p);
         }
 
         return true;
