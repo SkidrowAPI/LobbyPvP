@@ -35,7 +35,6 @@ public class DefaultArena {
 
     public void tpLobby(Player p) {
         final sendMessage m=new sendMessage(plugin);
-        getListPlayerLobby();
         xl = plugin.getConfig().getInt("pvparena.coordslobby.x");
         yl = plugin.getConfig().getInt("pvparena.coordslobby.y");
         zl = plugin.getConfig().getInt("pvparena.coordslobby.z");
