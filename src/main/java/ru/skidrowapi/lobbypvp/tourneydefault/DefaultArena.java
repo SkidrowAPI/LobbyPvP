@@ -43,6 +43,7 @@ public class DefaultArena {
         defaultworld.setSpawnLocation(xl, yl, zl);
         p.teleport(defaultworld.getSpawnLocation());
         listplayerlobby.add(p);
+        plugin.getLogger().info("tpLobby-"+String.valueOf(listplayerlobby.size()));
         m.HELLO_LOBBY(p);
 
     }
@@ -52,8 +53,7 @@ public class DefaultArena {
         if (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer")) {
             joinArena();
         }
-        plugin.getLogger().info(String.valueOf(listplayerlobby.size()));
-        plugin.getLogger().info(String.valueOf(plugin.getConfig().getInt("pvparena.minplayer")));
+        plugin.getLogger().info("checkTime-"+String.valueOf(listplayerlobby.size()));
     }
 
     private void joinArena() {

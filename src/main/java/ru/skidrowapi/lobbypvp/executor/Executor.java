@@ -43,8 +43,8 @@ public class Executor implements CommandExecutor {
             return true;
         }
         Player p = (Player) sender;
-
         final sendMessage m=new sendMessage(plugin);
+        final DefaultArena da=new DefaultArena(plugin);
 
         if (args.length == 0) {
             if (p.isOp()) {
@@ -64,7 +64,6 @@ public class Executor implements CommandExecutor {
                 @Override
                 public void run() {
                     join=false;
-                    DefaultArena da=new DefaultArena(plugin);
                     da.checkTime();
                     m.STOP_DEFAULT_ARENA();
                 }
@@ -83,7 +82,6 @@ public class Executor implements CommandExecutor {
                         return true;
                     }
                 }
-                DefaultArena da=new DefaultArena(plugin);
                 da.tpLobby(p);
             }else{
                m.STOP_CONNECT(p);
@@ -94,7 +92,6 @@ public class Executor implements CommandExecutor {
             World defaultworld = plugin.getServer().getWorld(worldarena);
             p.teleport(defaultworld.getSpawnLocation());
         }else if((args[0].equalsIgnoreCase("leave"))&&(args[1].equalsIgnoreCase("default"))){
-            DefaultArena da=new DefaultArena(plugin);
             s="(по собственному желанию)";
             da.leaveLobby(p,s);
         }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))) {
