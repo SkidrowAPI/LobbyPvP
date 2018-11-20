@@ -65,7 +65,7 @@ public class Executor implements CommandExecutor {
                 public void run() {
                     join=false;
                     DefaultArena da=new DefaultArena(plugin);
-                    da.checkTime(join);
+                    da.checkTime();
                     m.STOP_DEFAULT_ARENA();
                 }
             }.runTaskLater(this.plugin, 20*timestart);

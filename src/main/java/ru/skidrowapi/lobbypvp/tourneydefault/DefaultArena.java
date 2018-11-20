@@ -35,6 +35,7 @@ public class DefaultArena {
 
     public void tpLobby(Player p) {
         final sendMessage m=new sendMessage(plugin);
+        getListPlayerLobby();
         xl = plugin.getConfig().getInt("pvparena.coordslobby.x");
         yl = plugin.getConfig().getInt("pvparena.coordslobby.y");
         zl = plugin.getConfig().getInt("pvparena.coordslobby.z");
@@ -47,11 +48,13 @@ public class DefaultArena {
 
     }
 
-    public void checkTime(Boolean join){
+    public void checkTime(){
         getListPlayerLobby();
-        if ((join == false) && (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer"))) {
+        if (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer")) {
             joinArena();
         }
+        plugin.getLogger().info(String.valueOf(listplayerlobby.size()));
+        plugin.getLogger().info(String.valueOf(plugin.getConfig().getInt("pvparena.minplayer")));
     }
 
     private void joinArena() {
