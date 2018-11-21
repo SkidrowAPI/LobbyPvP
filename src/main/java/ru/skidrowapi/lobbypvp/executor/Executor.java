@@ -44,8 +44,7 @@ public class Executor implements CommandExecutor {
         }
         Player p = (Player) sender;
         final sendMessage m=new sendMessage(plugin);
-        final DefaultArena da=new DefaultArena(plugin);
-
+        DefaultArena da=null;
         if (args.length == 0) {
             if (p.isOp()) {
                 m.PLAYER_COMMAND_HASPERM(p);
@@ -58,13 +57,15 @@ public class Executor implements CommandExecutor {
                 m.DONT_HAS_PEEMISSION(p);
                 return true;
             }
+            da=new DefaultArena(plugin);
             join=true; timestart=plugin.getConfig().getConfigurationSection("pvparena").getInt("timestart");
             m.START_DEFAULT_ARENA();
+            final DefaultArena finalDa = da;
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     join=false;
-                    da.checkTime();
+                    finalDa.checkTime();
                     m.STOP_DEFAULT_ARENA();
                 }
             }.runTaskLater(this.plugin, 20*timestart);
