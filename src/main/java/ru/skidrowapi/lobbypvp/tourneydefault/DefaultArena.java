@@ -104,7 +104,6 @@ public class DefaultArena {
             m.PLAYER1_WIN(p1,p2);
             tpLobby(p1);
             tpLobby(p2);
-
         }else {
             Player p1=listplayerlobby.get(2);
             Player p2=listplayerlobby.get(1);
@@ -141,7 +140,7 @@ public class DefaultArena {
         List<Integer> slot = new ArrayList<Integer>();
         String name,material,enchantments;
         int lvl,slot_numbers,amount,time;
-        name=("&6[Fortune]").replace("&", "§");
+        name=("&6Fortune").replace("&", "§");
 
         material=plugin.getConfig().getString("pvparena.kits.armor.helmet.material");
         enchantments=plugin.getConfig().getString("pvparena.kits.armor.helmet.enchantments");

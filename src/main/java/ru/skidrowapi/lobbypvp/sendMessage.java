@@ -38,11 +38,11 @@ public class sendMessage {
     }
 
     public void SET_POINT_PLAYER1(Player p){
-        p.sendMessage(ChatColor.RED+"Новая точка для игрока№1 в мире"+ plugin.getConfig().getConfigurationSection("pvparena").get("world")+" создана!");
+        p.sendMessage(ChatColor.RED+"Новая точка для игрока№1 в мире "+ plugin.getConfig().getConfigurationSection("pvparena").get("world")+" создана!");
     }
 
     public void SET_POINT_PLAYER2(Player p){
-        p.sendMessage(ChatColor.RED + "Новая точка для игрока№2 в мире" + plugin.getConfig().getConfigurationSection("pvparena").get("world") + " создана!");
+        p.sendMessage(ChatColor.RED + "Новая точка для игрока№2 в мире " + plugin.getConfig().getConfigurationSection("pvparena").get("world") + " создана!");
     }
 
     public void PLAYER_COMMAND_HASPERM(Player p){

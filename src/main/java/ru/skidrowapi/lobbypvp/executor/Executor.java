@@ -5,22 +5,14 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.skidrowapi.lobbypvp.Loader;
 import ru.skidrowapi.lobbypvp.sendMessage;
 import ru.skidrowapi.lobbypvp.tourneydefault.DefaultArena;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Executor implements CommandExecutor {
     public Executor(Loader instance) {
@@ -32,7 +24,8 @@ public class Executor implements CommandExecutor {
     private Double xl,yl,zl;
     private String worldarena;
     private boolean join,vr,invent;
-
+    DefaultArena da=null;
+sendMessage m=new sendMessage(plugin);
 
 
 
@@ -43,8 +36,6 @@ public class Executor implements CommandExecutor {
             return true;
         }
         Player p = (Player) sender;
-        final sendMessage m=new sendMessage(plugin);
-        DefaultArena da=null;
         if (args.length == 0) {
             if (p.isOp()) {
                 m.PLAYER_COMMAND_HASPERM(p);
@@ -73,10 +64,12 @@ public class Executor implements CommandExecutor {
         if ((args[0].equalsIgnoreCase("join"))&&(args[1].equalsIgnoreCase("default"))) {
             if(join==true){
                 Inventory inv = p.getInventory();
+                p.getActivePotionEffects().clear();
                 for (int i = 0; i < inv.getSize(); i++) {
                     ItemStack is = inv.getItem(i);
                     if ((is==null)||(is.getType()== Material.AIR)) {
                     invent=true;
+                    p.getActivePotionEffects().clear();
                     }else{
                         invent=false;
                         m.CLEAR_INVENTORY(p);
@@ -115,10 +108,12 @@ public class Executor implements CommandExecutor {
                 xl=p.getLocation().getX();
                 yl=p.getLocation().getY();
                 zl=p.getLocation().getZ();
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("x",xl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("y",yl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer1").set("z",zl);
+                plugin.getConfig().set("pvparena.coordsPlayer1.x",xl);
+                plugin.getConfig().set("pvparena.coordsPlayer1.y",yl);
+                plugin.getConfig().set("pvparena.coordsPlayer1.z",zl);
                 plugin.saveConfig();
+                plugin.saveDefaultConfig();
+                plugin.reloadConfig();
                 m.SET_POINT_PLAYER1(p);
             }else m.GOTO_DEFAULT_WORLD(p);
         }else if((args[0].equalsIgnoreCase("setspawn2"))&&(args[1].equalsIgnoreCase("default"))) {
@@ -128,10 +123,12 @@ public class Executor implements CommandExecutor {
                 xl = p.getLocation().getX();
                 yl = p.getLocation().getY();
                 zl = p.getLocation().getZ();
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("x", xl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("y", yl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordsPlayer2").set("z", zl);
+                plugin.getConfig().set("pvparena.coordsPlayer2.x",xl);
+                plugin.getConfig().set("pvparena.coordsPlayer2.y",yl);
+                plugin.getConfig().set("pvparena.coordsPlayer2.z",zl);
                 plugin.saveConfig();
+                plugin.saveDefaultConfig();
+                plugin.reloadConfig();
                 m.SET_POINT_PLAYER2(p);
             } else m.GOTO_DEFAULT_WORLD(p);
         }

@@ -4,6 +4,7 @@ package ru.skidrowapi.lobbypvp;
 import org.bukkit.WorldCreator;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.skidrowapi.lobbypvp.executor.Executor;
+import ru.skidrowapi.lobbypvp.tourneydefault.DefaultListener;
 
 public class Loader extends JavaPlugin {
     Loader plugin=this;
@@ -15,6 +16,7 @@ public class Loader extends JavaPlugin {
         createWorld();
         Executor executor=new Executor(plugin);
         getCommand("pvp").setExecutor(executor);
+        getServer().getPluginManager().registerEvents(new DefaultListener(this),this);
     }
 
     @Override

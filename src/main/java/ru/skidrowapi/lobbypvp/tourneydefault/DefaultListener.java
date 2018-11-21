@@ -15,11 +15,11 @@ public class DefaultListener implements Listener {
         plugin = instance;
     }
     private Loader plugin;
+    DefaultArena da = new DefaultArena(plugin);
 
     @EventHandler
     void onPlayerDead(PlayerDeathEvent e){
-        Player p =e.getEntity();
-        DefaultArena da=new DefaultArena(plugin);
+        Player p =e.getEntity().getPlayer();
         da.playerWin(p);
     }
 
@@ -32,7 +32,7 @@ public class DefaultListener implements Listener {
         if (defaultworld==wk) {
             Player p = e.getPlayer();
             cause=e.getEventName();
-            DefaultArena da = new DefaultArena(plugin);
+
             da.leaveLobby(p,cause);
         }
     }
@@ -46,7 +46,6 @@ public class DefaultListener implements Listener {
         if (defaultworld==wk) {
             Player p = e.getPlayer();
             cause=e.getEventName();
-            DefaultArena da = new DefaultArena(plugin);
             da.leaveLobby(p,cause);
         }
     }
