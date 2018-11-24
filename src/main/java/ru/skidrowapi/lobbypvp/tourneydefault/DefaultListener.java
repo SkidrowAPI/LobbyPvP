@@ -11,25 +11,31 @@ import ru.skidrowapi.lobbypvp.Loader;
 
 public class DefaultListener implements Listener {
 
+    private Loader plugin;
     public DefaultListener(Loader instance) {
         plugin = instance;
     }
-    private Loader plugin;
     DefaultArena da = new DefaultArena(plugin);
 
     @EventHandler
     void onPlayerDead(PlayerDeathEvent e){
-        Player p =e.getEntity().getPlayer();
-        da.playerWin(p);
+        String worldarena;
+        World wk = e.getEntity().getWorld();
+        worldarena = plugin.getConfig().getString("pvparena.world");
+        World defaultworld = plugin.getServer().getWorld(worldarena);
+        if (defaultworld == wk) {
+            Player p = e.getEntity().getPlayer();
+            da.playerWin(p);
+        }
     }
 
     @EventHandler
     void onTeleportWorld(PlayerTeleportEvent e){
         String worldarena,cause;
-        World wk=e.getTo().getWorld();
+        World wk=e.getFrom().getWorld();
         worldarena = plugin.getConfig().getString("pvparena.world");
         World defaultworld = plugin.getServer().getWorld(worldarena);
-        if (defaultworld==wk) {
+        if (wk==defaultworld) {
             Player p = e.getPlayer();
             cause=e.getEventName();
 

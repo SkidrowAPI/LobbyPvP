@@ -1,6 +1,8 @@
 package ru.skidrowapi.lobbypvp.tourneydefault;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -11,6 +13,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import ru.skidrowapi.lobbypvp.Loader;
+import ru.skidrowapi.lobbypvp.rewards.GiveReward;
 import ru.skidrowapi.lobbypvp.sendMessage;
 
 
@@ -20,30 +23,33 @@ import java.util.Random;
 
 
 public class DefaultArena {
+    private Loader plugin;
     public DefaultArena(Loader instance) {
         plugin = instance;
+        m=new sendMessage(plugin);
     }
+    sendMessage m;
 
-    private Loader plugin;
-    private int xl, yl, zl, num1, num2;
-    private Double xa1, ya1, za1, xa2, ya2, za2;
+    private int   num1, num2;
+    private double pitch1,pitch2,yaw1,yaw2,pitch,yaw,xa1, ya1, za1, xa2, ya2,xl,yl, zl, za2;
     private String worldarena;
-    private Boolean join;
     ArrayList<Player> listplayerlobby = new ArrayList<Player>();
     ArrayList<Player> listplayerarena = new ArrayList<Player>();
 
 
     public void tpLobby(Player p) {
-        final sendMessage m=new sendMessage(plugin);
-        xl = plugin.getConfig().getInt("pvparena.coordslobby.x");
-        yl = plugin.getConfig().getInt("pvparena.coordslobby.y");
-        zl = plugin.getConfig().getInt("pvparena.coordslobby.z");
+        xl = plugin.getConfig().getDouble("pvparena.coordslobby.x");
+        yl = plugin.getConfig().getDouble("pvparena.coordslobby.y");
+        zl = plugin.getConfig().getDouble("pvparena.coordslobby.z");
+        yaw = plugin.getConfig().getDouble("pvparena.coordslobby.yaw");
+        pitch = plugin.getConfig().getDouble("pvparena.coordslobby.pitch");
         worldarena = plugin.getConfig().getString("pvparena.world");
         World defaultworld = plugin.getServer().getWorld(worldarena);
-        defaultworld.setSpawnLocation(xl, yl, zl);
+        defaultworld.setSpawnLocation((int)xl, (int)yl, (int)zl);
         p.teleport(defaultworld.getSpawnLocation());
+        p.getLocation().setYaw((float) yaw);
+        p.getLocation().setPitch((float) pitch);
         listplayerlobby.add(p);
-        plugin.getLogger().info("tpLobby-"+String.valueOf(listplayerlobby.size()));
         m.HELLO_LOBBY(p);
 
     }
@@ -51,14 +57,32 @@ public class DefaultArena {
     public void checkTime(){
         getListPlayerLobby();
         if (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer")) {
+            int reward = plugin.getConfig().getInt("vault.reward-amount");
+            Player pwin=listplayerlobby.get(0);
+            plugin.getLogger().info("reward="+String.valueOf(reward));
+            plugin.getLogger().info("player win="+pwin.getName());
             joinArena();
+        }else backTP();
+    }
+
+    public void backTP(){
+        getListPlayerLobby();
+        for (Player p : listplayerlobby){
+            p.teleport(plugin.getServer().getWorld("world").getSpawnLocation());
+            m.PLAYER_IS_ONE(p);
         }
-        plugin.getLogger().info("checkTime-"+String.valueOf(listplayerlobby.size()));
     }
 
     private void joinArena() {
-        final sendMessage m=new sendMessage(plugin);
         getListPlayerLobby();
+        if(listplayerlobby.size()==1){
+            GiveReward gw=new GiveReward(plugin);
+            m.PLAYER_LAST_WIN(listplayerlobby.get(0));
+            Player pwin=listplayerlobby.get(0);
+            gw.getReward(pwin);
+            backTP();
+            return;
+        }
         Random random = new Random();
         num1 = random.nextInt(listplayerlobby.size());
         num2 = random.nextInt(listplayerlobby.size() - 1);
@@ -72,31 +96,39 @@ public class DefaultArena {
         xa1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.x");
         ya1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.y");
         za1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.z");
+        yaw1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.yaw");
+        pitch1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.pitch");
 
         xa2 = plugin.getConfig().getDouble("pvparena.coordsPlayer2.x");
         ya2 = plugin.getConfig().getDouble("pvparena.coordsPlayer2.y");
         za2 = plugin.getConfig().getDouble("pvparena.coordsPlayer2.z");
+        yaw2 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.yaw");
+        pitch2 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.pitch");
 
         p1.getLocation().setX(xa1);
         p1.getLocation().setY(ya1);
         p1.getLocation().setZ(za1);
+        p1.getLocation().setPitch((float) pitch1);
+        p1.getLocation().setYaw((float) yaw1);
         m.PLAYER1_VS_PLAYER2(p1,p2);
 
         p2.getLocation().setX(xa2);
         p2.getLocation().setY(ya2);
         p2.getLocation().setZ(za2);
+        p2.getLocation().setPitch((float) pitch2);
+        p2.getLocation().setYaw((float) yaw2);
         m.PLAYER2_VS_PLAYER1(p1,p2);
 
         getInventory(p1,p2);
         listplayerarena.add(p1);
         listplayerarena.add(p2);
+        plugin.getServer().broadcastMessage(String.valueOf(listplayerlobby.size()));
 
     }
 
     public void playerWin(Player p){
         getListPlayerArena();
         getListPlayerLobby();
-        final sendMessage m=new sendMessage(plugin);
         if (listplayerarena.get(1)==p){
             Player p1=listplayerlobby.get(1);
             Player p2=listplayerlobby.get(2);
@@ -117,9 +149,8 @@ public class DefaultArena {
     }
 
     public void leaveLobby(Player p,String s){
-        getListPlayerLobby();
         getListPlayerArena();
-        final sendMessage m=new sendMessage(plugin);
+        getListPlayerLobby();
         for(Player player : listplayerlobby){
             if(player==p){
                 listplayerlobby.remove(p);
@@ -141,6 +172,8 @@ public class DefaultArena {
         String name,material,enchantments;
         int lvl,slot_numbers,amount,time;
         name=("&6Fortune").replace("&", "§");
+        p1.getInventory().clear(); p2.getInventory().clear();
+        p1.getActivePotionEffects().clear(); p2.getActivePotionEffects().clear();
 
         material=plugin.getConfig().getString("pvparena.kits.armor.helmet.material");
         enchantments=plugin.getConfig().getString("pvparena.kits.armor.helmet.enchantments");

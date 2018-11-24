@@ -15,18 +15,19 @@ import ru.skidrowapi.lobbypvp.tourneydefault.DefaultArena;
 
 
 public class Executor implements CommandExecutor {
+
     public Executor(Loader instance) {
         plugin = instance;
+        m=new sendMessage(plugin);
     }
+    sendMessage m;
     private Loader plugin;
-
     private int timestart;
-    private Double xl,yl,zl;
+    private double xl,yl,zl,yaw,pitch;
     private String worldarena;
-    private boolean join,vr,invent;
-    DefaultArena da=null;
-sendMessage m=new sendMessage(plugin);
+    private boolean join,invent;
 
+    DefaultArena da=null;
 
 
     @Override
@@ -41,11 +42,10 @@ sendMessage m=new sendMessage(plugin);
                 m.PLAYER_COMMAND_HASPERM(p);
             }
             m.PLAYER_COMMAND_NOTHASPERM(p);
-
         }else
         if ((args[0].equalsIgnoreCase("start"))&&(args[1].equalsIgnoreCase("default"))) {
             if(p.isOp()==false){
-                m.DONT_HAS_PEEMISSION(p);
+                m.DONT_HAS_PERMISSION(p);
                 return true;
             }
             da=new DefaultArena(plugin);
@@ -69,7 +69,6 @@ sendMessage m=new sendMessage(plugin);
                     ItemStack is = inv.getItem(i);
                     if ((is==null)||(is.getType()== Material.AIR)) {
                     invent=true;
-                    p.getActivePotionEffects().clear();
                     }else{
                         invent=false;
                         m.CLEAR_INVENTORY(p);
@@ -89,25 +88,33 @@ sendMessage m=new sendMessage(plugin);
             s="(по собственному желанию)";
             da.leaveLobby(p,s);
         }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))) {
-            worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
+            worldarena=plugin.getConfig().getString("pvparena.world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
             if(p.getLocation().getWorld()==defaultworld){
                 xl=p.getLocation().getX();
                 yl=p.getLocation().getY();
                 zl=p.getLocation().getZ();
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("x",xl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("y",yl);
-                plugin.getConfig().getConfigurationSection("pvparena").getConfigurationSection("coordslobby").set("z",zl);
+                yaw=p.getLocation().getYaw();
+                pitch=p.getLocation().getPitch();
+                plugin.getConfig().set("pvparena.coordslobby.yaw",yaw);
+                plugin.getConfig().set("pvparena.coordslobby.pitch",pitch);
+                plugin.getConfig().set("pvparena.coordslobby.x",xl);
+                plugin.getConfig().set("pvparena.coordslobby.y",yl);
+                plugin.getConfig().set("pvparena.coordslobby.z",zl);
                 plugin.saveConfig();
                 m.NEW_SPAWN_LOBBY_DEFAULT(p);
             }else m.GOTO_DEFAULT_WORLD(p);
         }else if((args[0].equalsIgnoreCase("setspawn1"))&&(args[1].equalsIgnoreCase("default"))){
-            worldarena=plugin.getConfig().getConfigurationSection("pvparena").getString("world");
+            worldarena=plugin.getConfig().getString("pvparena.world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
             if(p.getLocation().getWorld()==defaultworld){
                 xl=p.getLocation().getX();
                 yl=p.getLocation().getY();
                 zl=p.getLocation().getZ();
+                yaw=p.getLocation().getYaw();
+                pitch=p.getLocation().getPitch();
+                plugin.getConfig().set("pvparena.coordsPlayer1.yaw",yaw);
+                plugin.getConfig().set("pvparena.coordsPlayer1.pitch",pitch);
                 plugin.getConfig().set("pvparena.coordsPlayer1.x",xl);
                 plugin.getConfig().set("pvparena.coordsPlayer1.y",yl);
                 plugin.getConfig().set("pvparena.coordsPlayer1.z",zl);
@@ -117,12 +124,16 @@ sendMessage m=new sendMessage(plugin);
                 m.SET_POINT_PLAYER1(p);
             }else m.GOTO_DEFAULT_WORLD(p);
         }else if((args[0].equalsIgnoreCase("setspawn2"))&&(args[1].equalsIgnoreCase("default"))) {
-            worldarena = plugin.getConfig().getConfigurationSection("pvparena").getString("world");
+            worldarena = plugin.getConfig().getString("pvparena.world");
             World defaultworld = plugin.getServer().getWorld(worldarena);
             if (p.getLocation().getWorld() == defaultworld) {
                 xl = p.getLocation().getX();
                 yl = p.getLocation().getY();
                 zl = p.getLocation().getZ();
+                yaw=p.getLocation().getYaw();
+                pitch=p.getLocation().getPitch();
+                plugin.getConfig().set("pvparena.coordsPlayer2.yaw",yaw);
+                plugin.getConfig().set("pvparena.coordsPlayer2.pitch",pitch);
                 plugin.getConfig().set("pvparena.coordsPlayer2.x",xl);
                 plugin.getConfig().set("pvparena.coordsPlayer2.y",yl);
                 plugin.getConfig().set("pvparena.coordsPlayer2.z",zl);

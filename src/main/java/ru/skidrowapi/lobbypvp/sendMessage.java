@@ -9,7 +9,7 @@ public class sendMessage {
     }
     private Loader plugin;
 
-    public void DONT_HAS_PEEMISSION(Player p){
+    public void DONT_HAS_PERMISSION(Player p){
         p.sendMessage(ChatColor.RED+"Недостаточно прав!");
     }
 
@@ -77,5 +77,21 @@ public class sendMessage {
 
     public void HELLO_LOBBY(Player p){
         p.sendMessage(ChatColor.YELLOW + "Вы в лобби!");
+    }
+
+    public void PLAYER_IS_ONE(Player p){
+        p.sendMessage(ChatColor.YELLOW+"Нехватает игроков, дуэли не состоятся :(");
+    }
+
+    public void GIVE_REWARD(Player p, int reward){
+        p.sendMessage(ChatColor.YELLOW+"Вам начисленно за победу - "+reward);
+    }
+
+    public void IS_REWARD_DISABLE(){
+        plugin.getLogger().info("Vault is off, no rewards can be issued!");
+    }
+
+    public void PLAYER_LAST_WIN(Player p){
+        p.sendMessage(ChatColor.YELLOW+"Поздравляю Вы победили!");
     }
 }
