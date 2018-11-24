@@ -21,12 +21,9 @@ public class Loader extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DefaultListener(this),this);
         vaultEnabled = getConfig().getBoolean("vault.enabled");
 
-        if(isVaultEnabled()){
-
+        if(isVaultEnabled()) {
             VaultLoader VaultLoader = new VaultLoader();
-            if(VaultLoader.setupEconomy()){
-                plugin.getLogger().info("debag");
-            }else plugin.getLogger().info("no debag");
+            VaultLoader.setupEconomy();
         }else {
             getLogger().info("Vault disabled!");
         }

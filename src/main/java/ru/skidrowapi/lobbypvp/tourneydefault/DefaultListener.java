@@ -37,8 +37,7 @@ public class DefaultListener implements Listener {
         World defaultworld = plugin.getServer().getWorld(worldarena);
         if (wk==defaultworld) {
             Player p = e.getPlayer();
-            cause=e.getEventName();
-
+            cause=" куда-то телепортировался ";
             da.leaveLobby(p,cause);
         }
     }
@@ -51,7 +50,7 @@ public class DefaultListener implements Listener {
         World defaultworld = plugin.getServer().getWorld(worldarena);
         if (defaultworld==wk) {
             Player p = e.getPlayer();
-            cause=e.getEventName();
+            cause=" вышел из сети ";
             da.leaveLobby(p,cause);
         }
     }

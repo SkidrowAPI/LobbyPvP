@@ -1,9 +1,6 @@
 package ru.skidrowapi.lobbypvp.tourneydefault;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import ru.skidrowapi.lobbypvp.Loader;
 import ru.skidrowapi.lobbypvp.rewards.GiveReward;
-import ru.skidrowapi.lobbypvp.sendMessage;
+import ru.skidrowapi.lobbypvp.SendMessage;
 
 
 import java.util.ArrayList;
@@ -26,9 +23,9 @@ public class DefaultArena {
     private Loader plugin;
     public DefaultArena(Loader instance) {
         plugin = instance;
-        m=new sendMessage(plugin);
+        m=new SendMessage(plugin);
     }
-    sendMessage m;
+    SendMessage m;
 
     private int   num1, num2;
     private double pitch1,pitch2,yaw1,yaw2,pitch,yaw,xa1, ya1, za1, xa2, ya2,xl,yl, zl, za2;
@@ -49,6 +46,7 @@ public class DefaultArena {
         p.teleport(defaultworld.getSpawnLocation());
         p.getLocation().setYaw((float) yaw);
         p.getLocation().setPitch((float) pitch);
+        //сделать проверку есть ли игрок уже в листе
         listplayerlobby.add(p);
         m.HELLO_LOBBY(p);
 
@@ -57,10 +55,7 @@ public class DefaultArena {
     public void checkTime(){
         getListPlayerLobby();
         if (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer")) {
-            int reward = plugin.getConfig().getInt("vault.reward-amount");
-            Player pwin=listplayerlobby.get(0);
-            plugin.getLogger().info("reward="+String.valueOf(reward));
-            plugin.getLogger().info("player win="+pwin.getName());
+            plugin.getServer().broadcastMessage(ChatColor.AQUA+"На арене default "+listplayerlobby.size()+" человек!");
             joinArena();
         }else backTP();
     }
@@ -80,7 +75,7 @@ public class DefaultArena {
             m.PLAYER_LAST_WIN(listplayerlobby.get(0));
             Player pwin=listplayerlobby.get(0);
             gw.getReward(pwin);
-            backTP();
+            pwin.teleport(plugin.getServer().getWorld("world").getSpawnLocation());
             return;
         }
         Random random = new Random();
@@ -93,6 +88,8 @@ public class DefaultArena {
         }
         Player p1=listplayerlobby.get(num1);
         Player p2=listplayerlobby.get(num2);
+        worldarena = plugin.getConfig().getString("pvparena.world");
+        World defaultworld = plugin.getServer().getWorld(worldarena);
         xa1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.x");
         ya1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.y");
         za1 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.z");
@@ -105,41 +102,41 @@ public class DefaultArena {
         yaw2 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.yaw");
         pitch2 = plugin.getConfig().getDouble("pvparena.coordsPlayer1.pitch");
 
-        p1.getLocation().setX(xa1);
-        p1.getLocation().setY(ya1);
-        p1.getLocation().setZ(za1);
-        p1.getLocation().setPitch((float) pitch1);
-        p1.getLocation().setYaw((float) yaw1);
+        Location loc1=new Location(defaultworld,xa1,ya1,za1);
+        loc1.setYaw((float) yaw1);
+        loc1.setPitch((float) pitch1);
+        p1.teleport(loc1);
         m.PLAYER1_VS_PLAYER2(p1,p2);
 
-        p2.getLocation().setX(xa2);
-        p2.getLocation().setY(ya2);
-        p2.getLocation().setZ(za2);
-        p2.getLocation().setPitch((float) pitch2);
-        p2.getLocation().setYaw((float) yaw2);
+        Location loc2=new Location(defaultworld,xa2,ya2,za2);
+        loc2.setYaw((float) yaw2);
+        loc2.setPitch((float) pitch2);
+        p2.teleport(loc2);
         m.PLAYER2_VS_PLAYER1(p1,p2);
 
-        getInventory(p1,p2);
         listplayerarena.add(p1);
         listplayerarena.add(p2);
-        plugin.getServer().broadcastMessage(String.valueOf(listplayerlobby.size()));
+        p1.sendMessage("размер листа арены-"+listplayerarena.size());
 
+        getInventory(p1,p2);
     }
 
     public void playerWin(Player p){
         getListPlayerArena();
         getListPlayerLobby();
-        if (listplayerarena.get(1)==p){
-            Player p1=listplayerlobby.get(1);
-            Player p2=listplayerlobby.get(2);
+        if (listplayerarena.get(0)==p){
+            Player p1=listplayerlobby.get(0);
+            Player p2=listplayerlobby.get(1);
             listplayerlobby.remove(p1);
+            listplayerarena.clear();
             m.PLAYER1_WIN(p1,p2);
             tpLobby(p1);
             tpLobby(p2);
         }else {
-            Player p1=listplayerlobby.get(2);
-            Player p2=listplayerlobby.get(1);
+            Player p1=listplayerlobby.get(1);
+            Player p2=listplayerlobby.get(0);
             listplayerlobby.remove(p1);
+            listplayerarena.clear();
             m.PLAYER1_WIN(p1,p2);
             tpLobby(p1);
             tpLobby(p2);
@@ -151,15 +148,18 @@ public class DefaultArena {
     public void leaveLobby(Player p,String s){
         getListPlayerArena();
         getListPlayerLobby();
+        if(listplayerlobby.size()==0){
+            return;
+        }
         for(Player player : listplayerlobby){
             if(player==p){
                 listplayerlobby.remove(p);
-                if(listplayerarena.get(1)==p){
+                if(listplayerarena.size()>0&&listplayerarena.get(1)==p){
                     listplayerlobby.remove(p);
-                }else if(listplayerlobby.get(0)==p){
+                }else if(listplayerarena.size()>0&&listplayerlobby.get(0)==p){
                     listplayerlobby.remove(p);
                 }
-                p.teleport(p.getBedSpawnLocation());
+                p.teleport(plugin.getServer().getWorld("world").getSpawnLocation());
                 m.PLAYER_LEAVE_DEFAULT(p,s);
                 break;
             }
