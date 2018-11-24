@@ -3,15 +3,68 @@ pvparena: #тип арены.
     x: 79
     y: 64
     z: 135
-  world: world_default_arena #мир в котором будет турнир.
-  timestart: 30
+    yaw: 1.87796
+    pitch: 1.0501612
   coordsPlayer1: #позиция арены, игрока которого телепорнет на арену под номер 1.
     x: 75
     y: 64
     z: 135
+    yaw: 1.87796
+    pitch: 1.0501612
   coordsPlayer2: #позиция арены, игрока которого телепорнет на арену под номер 2.
     x: 84
     y: 64
     z: 135
-  minplayer: 2 #Лимит минимальное количество игроков для старта ивента.
+    yaw: 1.87796
+    pitch: 1.0501612
+  kits: #Набор который будет выдан игроку при телепорте на бой (на арену)
+    effects:
+      name: SPEED
+      lvl: 2
+    armor:
+      helmet:
+        material: DIAMOND_HELMET
+        enchantments: PROTECTION_ENVIRONMENTAL
+        lvl: 1
+      chestplate:
+        material: DIAMOND_CHESTPLATE
+        enchantments: PROTECTION_ENVIRONMENTAL
+        lvl: 1
+      leggings:
+        material: DIAMOND_LEGGINGS
+        enchantments: PROTECTION_ENVIRONMENTAL
+        lvl: 1
+      boots:
+        material: DIAMOND_BOOTS
+        enchantments: PROTECTION_ENVIRONMENTAL
+        lvl: 1
+    inventory:
+      sword:
+        material: DIAMOND_SWORD
+        amount: 1
+        enchantments: DAMAGE_ALL
+        lvl: 1
+        slot-numbers: 0
+      potion:
+        amount: 1
+        enchantments: FIRE_RESISTANCE
+        slot-numbers:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+      cooked_beef:
+        material: COOKED_BEEF
+        amount: 16
+        slot-numbers: 8
+  minplayer: 1 #Лимит минимальное количество игроков для старта ивента.
   maxplayer: 150 #Лимит максимальных игроков которые могут зайти на арену.
+  world: world_default_arena #мир в котором будет турнир.
+  timestart: 30 #кол-во времени сколько будет идти начало подключения ивента
+  timefights: 160 #кол-во времени сколько будет идти бой.
+vault:
+ enabled: true
+ reward-amount: 40000

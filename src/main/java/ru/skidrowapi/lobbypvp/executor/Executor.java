@@ -43,11 +43,7 @@ public class Executor implements CommandExecutor {
             }
             m.PLAYER_COMMAND_NOTHASPERM(p);
         }else
-        if ((args[0].equalsIgnoreCase("start"))&&(args[1].equalsIgnoreCase("default"))) {
-            if(p.isOp()==false){
-                m.DONT_HAS_PERMISSION(p);
-                return true;
-            }
+        if ((args[0].equalsIgnoreCase("start"))&&(args[1].equalsIgnoreCase("default"))&&p.hasPermission("pvpadmin")) {
             da=new DefaultArena(plugin);
             join=true; timestart=plugin.getConfig().getConfigurationSection("pvparena").getInt("timestart");
             m.START_DEFAULT_ARENA();
@@ -81,13 +77,13 @@ public class Executor implements CommandExecutor {
                 return true;
             }
 
-        }else if ((args[0].equalsIgnoreCase("world"))&&(args[1].equalsIgnoreCase("default"))) {
+        }else if ((args[0].equalsIgnoreCase("world"))&&(args[1].equalsIgnoreCase("default"))&&p.hasPermission("pvpadmin")) {
             World defaultworld = plugin.getServer().getWorld(worldarena);
             p.teleport(defaultworld.getSpawnLocation());
         }else if((args[0].equalsIgnoreCase("leave"))&&(args[1].equalsIgnoreCase("default"))){
             s="(по собственному желанию)";
             da.leaveLobby(p,s);
-        }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))) {
+        }else if ((args[0].equalsIgnoreCase("setlobby"))&&(args[1].equalsIgnoreCase("default"))&&p.hasPermission("pvpadmin")) {
             worldarena=plugin.getConfig().getString("pvparena.world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
             if(p.getLocation().getWorld()==defaultworld){
@@ -104,7 +100,7 @@ public class Executor implements CommandExecutor {
                 plugin.saveConfig();
                 m.NEW_SPAWN_LOBBY_DEFAULT(p);
             }else m.GOTO_DEFAULT_WORLD(p);
-        }else if((args[0].equalsIgnoreCase("setspawn1"))&&(args[1].equalsIgnoreCase("default"))){
+        }else if((args[0].equalsIgnoreCase("setspawn1"))&&(args[1].equalsIgnoreCase("default"))&&p.hasPermission("pvpadmin")){
             worldarena=plugin.getConfig().getString("pvparena.world");
             World defaultworld= plugin.getServer().getWorld(worldarena);
             if(p.getLocation().getWorld()==defaultworld){
@@ -123,7 +119,7 @@ public class Executor implements CommandExecutor {
                 plugin.reloadConfig();
                 m.SET_POINT_PLAYER1(p);
             }else m.GOTO_DEFAULT_WORLD(p);
-        }else if((args[0].equalsIgnoreCase("setspawn2"))&&(args[1].equalsIgnoreCase("default"))) {
+        }else if((args[0].equalsIgnoreCase("setspawn2"))&&(args[1].equalsIgnoreCase("default"))&&p.hasPermission("pvpadmin")) {
             worldarena = plugin.getConfig().getString("pvparena.world");
             World defaultworld = plugin.getServer().getWorld(worldarena);
             if (p.getLocation().getWorld() == defaultworld) {

@@ -24,10 +24,13 @@ public class Loader extends JavaPlugin {
         if(isVaultEnabled()){
 
             VaultLoader VaultLoader = new VaultLoader();
-            VaultLoader.setupEconomy();
+            if(VaultLoader.setupEconomy()){
+                plugin.getLogger().info("debag");
+            }else plugin.getLogger().info("no debag");
         }else {
             getLogger().info("Vault disabled!");
         }
+
     }
 
     @Override

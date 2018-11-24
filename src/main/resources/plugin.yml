@@ -2,6 +2,7 @@ name: LobbyPvP
 main: ru.skidrowapi.lobbypvp.Loader
 version: 1.0
 description: LobbyPvP
+depend: [Vault]
 commands:
   pvp:
     usage: /pvp
