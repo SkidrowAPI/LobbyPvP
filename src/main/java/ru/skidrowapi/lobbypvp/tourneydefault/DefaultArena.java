@@ -116,7 +116,6 @@ public class DefaultArena {
 
         listplayerarena.add(p1);
         listplayerarena.add(p2);
-        p1.sendMessage("размер листа арены-"+listplayerarena.size());
 
         getInventory(p1,p2);
     }

@@ -3,8 +3,8 @@ package ru.skidrowapi.lobbypvp;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class sendMessage {
-    public sendMessage(Loader instance) {
+public class SendMessage {
+    public SendMessage(Loader instance) {
         plugin = instance;
     }
     private Loader plugin;
@@ -14,11 +14,11 @@ public class sendMessage {
     }
 
     public void START_DEFAULT_ARENA(){
-        plugin.getServer().broadcastMessage(ChatColor.BLUE+"Запустилась арена"+ChatColor.DARK_BLUE+" default "+ChatColor.BLUE+", запущен таймер на подключение к лобби!");
+        plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Запустилась арена"+ChatColor.AQUA+" default "+ChatColor.YELLOW+", запущен таймер на подключение к лобби!");
     }
 
     public void STOP_DEFAULT_ARENA(){
-        plugin.getServer().broadcastMessage(ChatColor.BLUE+"Теперь подключится к арене"+ChatColor.DARK_BLUE+" default "+ChatColor.BLUE+"не получится, таймер остановился!");
+        plugin.getServer().broadcastMessage(ChatColor.YELLOW+"Теперь подключится к арене"+ChatColor.AQUA+" default "+ChatColor.YELLOW+"не получится, таймер остановился!");
     }
 
     public void CLEAR_INVENTORY(Player p){
@@ -34,27 +34,29 @@ public class sendMessage {
     }
 
     public void GOTO_DEFAULT_WORLD(Player p){
-        p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().getConfigurationSection("pvparena").get("world")+".");
+        p.sendMessage(ChatColor.RED + "Перейдите в мир "+plugin.getConfig().get("pvparena.world")+".");
     }
 
     public void SET_POINT_PLAYER1(Player p){
-        p.sendMessage(ChatColor.RED+"Новая точка для игрока№1 в мире "+ plugin.getConfig().getConfigurationSection("pvparena").get("world")+" создана!");
+        p.sendMessage(ChatColor.RED+"Новая точка для игрока №1 в мире "+ plugin.getConfig().get("pvparena.world")+" создана!");
     }
 
     public void SET_POINT_PLAYER2(Player p){
-        p.sendMessage(ChatColor.RED + "Новая точка для игрока№2 в мире " + plugin.getConfig().getConfigurationSection("pvparena").get("world") + " создана!");
+        p.sendMessage(ChatColor.RED + "Новая точка для игрока №2 в мире " + plugin.getConfig().get("pvparena.world") + " создана!");
     }
 
     public void PLAYER_COMMAND_HASPERM(Player p){
-        p.sendMessage(ChatColor.YELLOW + "/pvp start <arena>" + ChatColor.AQUA + " - включает турниры(default или sumo)");
-        p.sendMessage(ChatColor.YELLOW + "/pvp world <arena>" + ChatColor.AQUA + " - войти в мир(default или sumo)");
+        p.sendMessage(ChatColor.YELLOW + "/pvp start <arena>" + ChatColor.AQUA + " - включает турниры (default или sumo)");
+        p.sendMessage(ChatColor.YELLOW + "/pvp world <arena>" + ChatColor.AQUA + " - войти в мир (default или sumo)");
         p.sendMessage(ChatColor.YELLOW + "/pvp setlobby <arena>" + ChatColor.AQUA + " - устанавливает новый спавн лобби (там где вы стоите!)");
         p.sendMessage(ChatColor.YELLOW + "/pvp setspawn1 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
         p.sendMessage(ChatColor.YELLOW + "/pvp setspawn2 <arena>" + ChatColor.AQUA + " - устанавливает новую точку для игроков на арене (там где вы стоите!)");
     }
 
     public void PLAYER_COMMAND_NOTHASPERM(Player p){
-        p.sendMessage(ChatColor.YELLOW + "/pvp join <arena>" + ChatColor.AQUA + " - войти в турнир(default или sumo)");
+        p.sendMessage(ChatColor.YELLOW + "/pvp join <arena>" + ChatColor.AQUA + " - войти в турнир (default или sumo)");
+        p.sendMessage(ChatColor.YELLOW + "/pvp leave <arena>" + ChatColor.AQUA + " - выйти из турнира (default или sumo)");
+
     }
 
     public void PLAYER1_VS_PLAYER2(Player p1,Player p2){
@@ -72,7 +74,7 @@ public class sendMessage {
     }
 
     public void PLAYER_LEAVE_DEFAULT(Player p,String s){
-        p.sendMessage(ChatColor.RED+"Вы покинули "+s+". Вы телепортированный домой!");
+        p.sendMessage(ChatColor.RED+"Вы покинули "+s+". Вы телепортированны на spawn!");
     }
 
     public void HELLO_LOBBY(Player p){
@@ -93,5 +95,13 @@ public class sendMessage {
 
     public void PLAYER_LAST_WIN(Player p){
         p.sendMessage(ChatColor.YELLOW+"Поздравляю Вы победили!");
+    }
+
+    public void COMMAND_EXIST(Player p){
+        p.sendMessage(ChatColor.RED+"Команда не найдена или не существует!");
+    }
+
+    public void PLAYER_IN_LOBBY_EXIST(Player p){
+        p.sendMessage(ChatColor.RED+"Вы уже состоите в лобби!");
     }
 }
