@@ -53,7 +53,6 @@ public class DefaultArena {
     }
 
     public void checkTime(){
-        getListPlayerLobby();
         if (listplayerlobby.size() >= plugin.getConfig().getInt("pvparena.minplayer")) {
             plugin.getServer().broadcastMessage(ChatColor.AQUA+"На арене default "+listplayerlobby.size()+" человек!");
             joinArena();
@@ -61,7 +60,6 @@ public class DefaultArena {
     }
 
     public void backTP(){
-        getListPlayerLobby();
         for (Player p : listplayerlobby){
             p.teleport(plugin.getServer().getWorld("world").getSpawnLocation());
             m.PLAYER_IS_ONE(p);
@@ -69,7 +67,6 @@ public class DefaultArena {
     }
 
     private void joinArena() {
-        getListPlayerLobby();
         if(listplayerlobby.size()==1){
             GiveReward gw=new GiveReward(plugin);
             m.PLAYER_LAST_WIN(listplayerlobby.get(0));
@@ -121,8 +118,6 @@ public class DefaultArena {
     }
 
     public void playerWin(Player p){
-        getListPlayerArena();
-        getListPlayerLobby();
         if (listplayerarena.get(0)==p){
             Player p1=listplayerlobby.get(0);
             Player p2=listplayerlobby.get(1);
@@ -145,8 +140,6 @@ public class DefaultArena {
     }
 
     public void leaveLobby(Player p,String s){
-        getListPlayerArena();
-        getListPlayerLobby();
         if(listplayerlobby.size()==0){
             return;
         }
@@ -263,14 +256,5 @@ public class DefaultArena {
         p1.updateInventory();
         p2.updateInventory();
     }
-
-    public ArrayList<Player> getListPlayerLobby() {
-        return listplayerlobby;
-    }
-    public ArrayList<Player> getListPlayerArena() {
-        return listplayerarena;
-    }
-
-
 
 }

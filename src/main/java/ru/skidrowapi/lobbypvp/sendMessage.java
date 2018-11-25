@@ -101,7 +101,7 @@ public class SendMessage {
         p.sendMessage(ChatColor.RED+"Команда не найдена или не существует!");
     }
 
-    public void PLAYER_IN_LOBBY_EXIST(Player p){
+   /* public void PLAYER_IN_LOBBY_EXIST(Player p){
         p.sendMessage(ChatColor.RED+"Вы уже состоите в лобби!");
-    }
+    }*/ //сделать в tpLobby
 }
