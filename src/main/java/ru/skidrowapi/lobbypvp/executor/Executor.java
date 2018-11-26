@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.skidrowapi.lobbypvp.Loader;
-import ru.skidrowapi.lobbypvp.SendMessage;
+import ru.skidrowapi.lobbypvp.Message;
 import ru.skidrowapi.lobbypvp.tourneydefault.DefaultArena;
 
 
@@ -19,9 +19,9 @@ public class Executor implements CommandExecutor {
 
     public Executor(Loader instance) {
         plugin = instance;
-        m=new SendMessage(plugin);
+        m=new Message(plugin);
     }
-    SendMessage m;
+    Message m;
     private Loader plugin;
     private int timestart;
     private double xl,yl,zl,yaw,pitch;

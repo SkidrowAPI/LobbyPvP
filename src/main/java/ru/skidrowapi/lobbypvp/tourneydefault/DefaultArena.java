@@ -10,8 +10,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import ru.skidrowapi.lobbypvp.Loader;
+import ru.skidrowapi.lobbypvp.Message;
 import ru.skidrowapi.lobbypvp.rewards.GiveReward;
-import ru.skidrowapi.lobbypvp.SendMessage;
 
 
 import java.util.ArrayList;
@@ -23,9 +23,9 @@ public class DefaultArena {
     private Loader plugin;
     public DefaultArena(Loader instance) {
         plugin = instance;
-        m=new SendMessage(plugin);
+        m=new Message(plugin);
     }
-    SendMessage m;
+    Message m;
 
     private int   num1, num2;
     private double pitch1,pitch2,yaw1,yaw2,pitch,yaw,xa1, ya1, za1, xa2, ya2,xl,yl, zl, za2;

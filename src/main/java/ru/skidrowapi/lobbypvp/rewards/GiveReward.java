@@ -2,8 +2,8 @@ package ru.skidrowapi.lobbypvp.rewards;
 
 import org.bukkit.entity.Player;
 import ru.skidrowapi.lobbypvp.Loader;
+import ru.skidrowapi.lobbypvp.Message;
 import ru.skidrowapi.lobbypvp.modules.VaultLoader;
-import ru.skidrowapi.lobbypvp.SendMessage;
 
 public class GiveReward {
     private int reward;
@@ -13,7 +13,7 @@ public class GiveReward {
     }
 
     public void getReward(Player p){
-        SendMessage m=new SendMessage(plugin);
+        Message m=new Message(plugin);
         reward = plugin.getConfig().getInt("vault.reward-amount");
         if(plugin.isVaultEnabled()){
 
